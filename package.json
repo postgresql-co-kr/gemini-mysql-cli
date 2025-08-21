@@ -21,7 +21,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/db-cli.js",
-    "prepare": "npm run build && echo #!/usr/bin/env node > dist/db-cli.tmp && type dist/db-cli.js >> dist/db-cli.tmp && move /Y dist/db-cli.tmp dist/db-cli.js"
+    "prepare": "npm run build && node -e \"const fs = require('fs'); const filePath = 'dist/db-cli.js'; let content = fs.readFileSync(filePath, 'utf8'); if (!content.startsWith('#!')) { content = '#!/usr/bin/env node\n' + content; fs.writeFileSync(filePath, content, 'utf8'); }\""
   },
   "keywords": [
     "mysql",
