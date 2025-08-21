@@ -19,9 +19,9 @@
     "db.json.sample"
   ],
   "scripts": {
-        "build": "tsc",
+    "build": "tsc",
     "start": "node dist/db-cli.js",
-    "prepare": "npm run build && node scripts/add-shebang.js"
+    "prepare": "npm run build"
   },
   "keywords": [
     "mysql",
