@@ -23,14 +23,19 @@ interface DbConfig {
 async function readDbConfig(): Promise<DbConnections | null> {
     const localConfigPath = path.join(__dirname, '..', 'gemini-mysql.json');
     const homeConfigPath = path.join(process.env.HOME || process.env.USERPROFILE || '', '.debate300', 'gemini-mysql.json');
+    const sampleConfigPath = path.join(__dirname, '..', 'db.json.sample');
 
     let dbConfigPath = '';
     if (fs.existsSync(localConfigPath)) {
         dbConfigPath = localConfigPath;
     } else if (fs.existsSync(homeConfigPath)) {
         dbConfigPath = homeConfigPath;
-    } else {
-        console.error('Error: Configuration file not found in local project directory or home directory.');
+    } else if (fs.existsSync(sampleConfigPath)) {
+        dbConfigPath = sampleConfigPath;
+        console.log('Configuration file not found. Using db.json.sample instead.');
+    }
+    else {
+        console.error('Error: Configuration file not found in local project directory, home directory, or as a sample file.');
         return null;
     }
 

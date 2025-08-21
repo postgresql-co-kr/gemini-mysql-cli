@@ -2,28 +2,31 @@
   "name": "@debate300/gemini-mysql-cli",
   "version": "1.0.2",
   "description": "A CLI tool to interact with MySQL databases.",
+  "author": "debate300",
+  "license": "MIT",
+  "homepage": "https://github.com/postgresql-co-kr/gemini-mysql-cli",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/postgresql-co-kr/gemini-mysql-cli.git"
+  },
   "main": "dist/db-cli.js",
   "types": "dist/db-cli.d.ts",
   "bin": {
     "gemini-mysql-cli": "dist/db-cli.js"
   },
+  "files": [
+    "dist",
+    "db.json.sample"
+  ],
   "scripts": {
     "build": "tsc",
-    "start": "node dist/db-cli.js",
-    "postinstall": "node postinstall.js"
+    "start": "node dist/db-cli.js"
   },
   "keywords": [
     "mysql",
     "cli",
     "database"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/postgresql-co-kr/gemini-mysql-cli.git"
-  },
-  "homepage": "https://debate300.com",
-  "packageManager": "pnpm@10.12.4",
-  "license": "MIT",
   "dependencies": {
     "mysql2": "^3.14.3"
   },
@@ -32,11 +35,6 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   },
-  "files": [
-    "dist",
-    "postinstall.js",
-    "db.json.sample"
-  ],
   "publishConfig": {
     "access": "public"
   }
