@@ -1,6 +1,6 @@
 {
   "name": "@debate300/gemini-mysql-cli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A CLI tool to interact with MySQL databases.",
   "main": "dist/db-cli.js",
   "types": "dist/db-cli.d.ts",
