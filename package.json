@@ -19,9 +19,9 @@
     "db.json.sample"
   ],
   "scripts": {
-    "build": "tsc",
+        "build": "tsc",
     "start": "node dist/db-cli.js",
-    "prepare": "npm run build && node -e \"const fs = require('fs'); const filePath = 'dist/db-cli.js'; let content = fs.readFileSync(filePath, 'utf8'); if (!content.startsWith('#!')) { content = '#!/usr/bin/env node\n' + content; fs.writeFileSync(filePath, content, 'utf8'); }\""
+    "prepare": "npm run build && node scripts/add-shebang.js"
   },
   "keywords": [
     "mysql",
