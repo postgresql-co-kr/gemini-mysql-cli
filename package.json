@@ -20,7 +20,8 @@
   ],
   "scripts": {
     "build": "tsc",
-    "start": "node dist/db-cli.js"
+    "start": "node dist/db-cli.js",
+    "prepare": "npm run build && echo #!/usr/bin/env node > dist/db-cli.tmp && type dist/db-cli.js >> dist/db-cli.tmp && move /Y dist/db-cli.tmp dist/db-cli.js"
   },
   "keywords": [
     "mysql",
