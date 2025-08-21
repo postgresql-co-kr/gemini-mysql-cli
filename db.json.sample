@@ -1,0 +1,13 @@
+{
+  "connections": [
+      {                                
+        "my_connection_name": {        
+          "host": "your_host",         
+          "port": 3306,                
+          "user": "your_user",         
+          "password": "your_password", 
+          "database": "your_database"  
+        }                              
+      }
+  ]
+}
