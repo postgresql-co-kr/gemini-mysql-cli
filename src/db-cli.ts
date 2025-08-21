@@ -21,7 +21,19 @@ interface DbConfig {
 
 // Function to read db.json
 async function readDbConfig(): Promise<DbConnections | null> {
-    const dbConfigPath = path.join(process.env.HOME || process.env.USERPROFILE || '', '.debate300', 'gemini-mysql.json');
+    const localConfigPath = path.join(__dirname, '..', 'gemini-mysql.json');
+    const homeConfigPath = path.join(process.env.HOME || process.env.USERPROFILE || '', '.debate300', 'gemini-mysql.json');
+
+    let dbConfigPath = '';
+    if (fs.existsSync(localConfigPath)) {
+        dbConfigPath = localConfigPath;
+    } else if (fs.existsSync(homeConfigPath)) {
+        dbConfigPath = homeConfigPath;
+    } else {
+        console.error('Error: Configuration file not found in local project directory or home directory.');
+        return null;
+    }
+
     try {
         const fileContent = await fs.promises.readFile(dbConfigPath, 'utf8');
         const config: DbConfig = JSON.parse(fileContent);
