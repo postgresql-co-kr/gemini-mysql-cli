@@ -14,6 +14,12 @@ npm install -g @debate300/gemini-mysql-cli
 gemini-mysql-cli <command> [connection_name] <args...>
 
 # Specific Commands
+# When using defaultConnection:
+gemini-mysql-cli table-info <table_name>
+gemini-mysql-cli find-tables <search_pattern>
+gemini-mysql-cli search-data <table_name> <column_name> <search_value>
+
+# When specifying connection_name:
 gemini-mysql-cli table-info [connection_name] <table_name>
 gemini-mysql-cli find-tables [connection_name] <search_pattern>
 gemini-mysql-cli search-data [connection_name] <table_name> <column_name> <search_value>

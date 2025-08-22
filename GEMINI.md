@@ -22,26 +22,23 @@ To contribute to the project, you'll need to have Node.js and pnpm installed.
 
 1.  **Clone the repository:**
     ```bash
-git clone https://github.com/postgresql-co-kr/gemini-mysql-cli.git
-```
+    git clone https://github.com/postgresql-co-kr/gemini-mysql-cli.git
+    ```
+
+````
 2.  **Install dependencies:**
     ```bash
 pnpm install
-```
+````
+
 3.  **Build the project:**
     ```bash
-pnpm build
-```
+    pnpm build
+    ```
 
-## Available Tools
+````
 
-The following tools are available for interacting with this project:
 
-- `read_file`: Reads the content of a file.
-- `write_file`: Writes content to a file.
-- `replace`: Replaces text within a file.
-- `run_shell_command`: Executes a shell command.
-- `list_directory`: Lists the files and directories in a given path.
 
 ## Gemini MySQL CLI 활용 안내
 
@@ -49,12 +46,13 @@ The following tools are available for interacting with this project:
 
 ### 테이블 정보 조회
 
-특정 테이블의 상세 정보를 확인하려면 `table-info` 명령어를 사용합니다. 명령어 실행 시, 설정된 **연결 이름**과 **테이블 이름**을 지정해야 합니다.
+특정 테이블의 상세 정보를 확인하려면 `table-info` 명령어를 사용합니다.
 
-**사용 예시:**
+**사용 예시 (기본 연결 사용 시):**
 > "users 테이블의 정보를 보여줘."
-> "run `gemini-mysql-cli table-info [연결이름] users`"
+> "run `gemini-mysql-cli table-info users`"
 
+**사용 예시 (연결 이름 지정 시):**
 > "products 테이블의 정보를 알려줘."
 > "run `gemini-mysql-cli table-info [연결이름] products`"
 
@@ -62,23 +60,26 @@ The following tools are available for interacting with this project:
 
 테이블 이름에 특정 문자열이 포함된 테이블들을 찾고 싶을 때는 `find-tables` 명령어를 사용합니다.
 
-**사용 예시:**
+**사용 예시 (기본 연결 사용 시):**
 > "'order'가 포함된 테이블을 찾아줘."
-> "run `gemini-mysql-cli find-tables [연결이름] order`"
+> "run `gemini-mysql-cli find-tables order`"
 
+**사용 예시 (연결 이름 지정 시):**
 > "'log'가 포함된 테이블을 검색해줘."
 > "run `gemini-mysql-cli find-tables [연결이름] log`"
 
 ### 데이터 검색
 
-특정 테이블의 특정 컬럼에서 데이터를 검색하려면 `search-data` 명령어를 사용합니다. 명령어 실행 시, 설정된 **연결 이름**, **테이블 이름**, **컬럼 이름**, 그리고 **검색할 값**을 지정해야 합니다.
+특정 테이블의 특정 컬럼에서 데이터를 검색하려면 `search-data` 명령어를 사용합니다.
 
-**사용 예시:**
+**사용 예시 (기본 연결 사용 시):**
 > "users 테이블의 email 컬럼에서 'user@example.com'을 검색해줘."
-> "run `gemini-mysql-cli search-data [연결이름] users email user@example.com`"
+> "run `gemini-mysql-cli search-data users email user@example.com`"
 
+**사용 예시 (연결 이름 지정 시):**
 > "products 테이블의 name 컬럼에서 'Laptop'을 검색해줘."
 > "run `gemini-mysql-cli search-data [연결이름] products name \"Laptop\"`"
+
 
 ### 기본 연결 설정 (Optional)
 
@@ -100,7 +101,7 @@ The following tools are available for interacting with this project:
     // ... 다른 연결 설정
   }
 }
-```
+````
 
 위 예시처럼 `defaultConnection` 필드를 추가하면, 명령어를 실행할 때 연결 이름을 생략할 수 있습니다.
-예: `run `gemini-mysql-cli table-info users`` (이 경우 `my_connection`이 기본으로 사용됨)
+예: `run `gemini-mysql-cli table-info users``(이 경우`my_connection`이 기본으로 사용됨)
