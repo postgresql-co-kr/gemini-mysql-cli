@@ -17,11 +17,15 @@ interface DbConnections {
 }
 
 interface DbConfig {
+  defaultConnection?: string; // Added this line
   connections: { [key: string]: DbConnectionConfig }[];
 }
 
 // Function to read db.json
-async function readDbConfig(): Promise<DbConnections | null> {
+async function readDbConfig(): Promise<{
+  connections: DbConnections;
+  defaultConnection?: string;
+} | null> {
   const localConfigPath = path.join(__dirname, "..", "gemini-mysql.json");
   const homeConfigPath = path.join(
     process.env.HOME || process.env.USERPROFILE || "",
@@ -52,7 +56,7 @@ async function readDbConfig(): Promise<DbConnections | null> {
     config.connections.forEach((connObj) => {
       Object.assign(connections, connObj);
     });
-    return connections;
+    return { connections, defaultConnection: config.defaultConnection }; // Return both
   } catch (error) {
     console.error(`Error reading db.json at ${dbConfigPath}:`, error);
     return null;
@@ -63,12 +67,13 @@ async function readDbConfig(): Promise<DbConnections | null> {
 async function getConnection(
   connectionName: string
 ): Promise<mysql.Connection | null> {
-  const dbConfig = await readDbConfig();
-  if (!dbConfig) {
+  const dbConfigResult = await readDbConfig(); // Changed
+  if (!dbConfigResult) {
     return null;
   }
+  const { connections } = dbConfigResult; // Destructure connections
 
-  const config = dbConfig[connectionName];
+  const config = connections[connectionName]; // Access connections
   if (!config) {
     console.error(
       `Connection configuration for '${connectionName}' not found in db.json.`
@@ -223,52 +228,89 @@ async function searchRowData(
 
 // Main CLI logic
 async function main() {
-  const args = process.argv.slice(2); // Skip 'node' and 'db-cli.js'
+  const args = process.argv.slice(2);
 
-  if (args.length < 2) {
+  const dbConfigResult = await readDbConfig();
+  if (!dbConfigResult) {
+    return;
+  }
+  const { connections, defaultConnection } = dbConfigResult;
+
+  let command: string | undefined;
+  let connectionName: string | undefined;
+  let commandArgs: string[] = [];
+
+  // Determine command
+  if (args.length > 0) {
+    command = args[0];
+  }
+
+  // Determine connectionName and commandArgs
+  if (args.length > 1) {
+    // Check if args[1] is a known connection name
+    if (connections[args[1]]) {
+      connectionName = args[1];
+      commandArgs = args.slice(2); // Remaining args are for the command
+    } else {
+      // args[1] is not a connection name, assume default connection and args[1] is the first command arg
+      connectionName = defaultConnection;
+      commandArgs = args.slice(1); // Remaining args are for the command
+    }
+  } else {
+    // Only command provided, use default connection
+    connectionName = defaultConnection;
+    commandArgs = [];
+  }
+
+  // If no command or connection name could be determined, show usage
+  if (!command || !connectionName) {
     console.log("Usage:");
+    console.log("  gemini-mysql-cli <command> [connection_name] <args...>");
+    console.log("  Commands:");
+    console.log("    table-info [connection_name] <table_name>");
+    console.log("    find-tables [connection_name] <search_pattern>");
     console.log(
-      "  node dist/db-cli.js table-info <connection_name> <table_name>"
+      "    search-data [connection_name] <table_name> <column_name> <search_value>"
     );
     console.log(
-      "  node dist/db-cli.js find-tables <connection_name> <search_pattern>"
-    );
-    console.log(
-      "  node dist/db-cli.js search-data <connection_name> <table_name> <column_name> <search_value>"
+      "\nNote: If [connection_name] is omitted, the default connection from gemini-mysql.json will be used."
     );
     return;
   }
 
-  const command = args[0];
-  const connectionName = args[1];
-
+  // Now use command and connectionName, and commandArgs for specific command logic
   switch (command) {
     case "table-info":
-      if (args.length !== 3) {
+      if (commandArgs.length !== 1) {
         console.log(
-          "Usage: node dist/db-cli.js table-info <connection_name> <table_name>"
+          "Usage: gemini-mysql-cli table-info [connection_name] <table_name>"
         );
         return;
       }
-      await getTableInfo(connectionName, args[2]);
+      await getTableInfo(connectionName, commandArgs[0]);
       break;
     case "find-tables":
-      if (args.length !== 3) {
+      if (commandArgs.length !== 1) {
         console.log(
-          "Usage: node dist/db-cli.js find-tables <connection_name> <search_pattern>"
+          "Usage: gemini-mysql-cli find-tables [connection_name] <search_pattern>"
         );
         return;
       }
-      await findTables(connectionName, args[2]);
+      await findTables(connectionName, commandArgs[0]);
       break;
     case "search-data":
-      if (args.length !== 5) {
+      if (commandArgs.length !== 3) {
         console.log(
-          "Usage: node dist/db-cli.js search-data <connection_name> <table_name> <column_name> <search_value>"
+          "Usage: gemini-mysql-cli search-data [connection_name] <table_name> <column_name> <search_value>"
         );
         return;
       }
-      await searchRowData(connectionName, args[2], args[3], args[4]);
+      await searchRowData(
+        connectionName,
+        commandArgs[0],
+        commandArgs[1],
+        commandArgs[2]
+      );
       break;
     default:
       console.log(`Unknown command: ${command}`);

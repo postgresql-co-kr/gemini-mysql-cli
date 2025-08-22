@@ -1,4 +1,5 @@
 {
+  "defaultConnection": "my_connection_name",
   "connections": [
       {                                
         "my_connection_name": {        
